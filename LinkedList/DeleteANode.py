@@ -19,7 +19,7 @@ class linkedList:
         self.head = temp
     
     #can be done recursively. figure it out for yourself    
-    def deleteNode(self,key):
+    def deleteNodeWithKey(self,key):
         temp = self.head
         
         if(temp is not None):
@@ -41,6 +41,25 @@ class linkedList:
         
         temp=None
     
+    def deleteNodeWithPosi(self,pos):
+        temp = self.head
+
+        if(temp is not None):
+            if pos==1:
+                self.head = temp.next
+                temp = None
+                return
+        
+        for i in range(pos-1):
+            prev = temp
+            temp = temp.next
+
+        if(temp == None):
+            return
+        prev.next = temp.next
+        temp=None
+        
+    
 
 if __name__ == '__main__':
     llist = linkedList()
@@ -51,13 +70,24 @@ if __name__ == '__main__':
     llist.pushNode(4)
     llist.pushNode(5)
     llist.pushNode(6)
+    llist.pushNode(7)
+    llist.pushNode(8)
+    llist.pushNode(9)
+    llist.pushNode(0)
+    llist.pushNode(10)
     
     llist.printList()
     
-    print("\nllist after deletion, say, 4 and 6\n")
+    print("\nNow lets try deletion\n")
     
-    llist.deleteNode(4)
-    llist.deleteNode(6)
+    llist.deleteNodeWithKey(4)
+    llist.deleteNodeWithKey(6)
+    print("\nKey deletion done at 4,6\n")
+    llist.printList()
+
+    llist.deleteNodeWithPosi(3)
+    llist.deleteNodeWithPosi(4)
+    print("\nposition deletion done at 3,4\n")
     llist.printList()
     
     
