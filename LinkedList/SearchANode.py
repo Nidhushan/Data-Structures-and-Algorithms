@@ -22,7 +22,7 @@ class LinkedList:
 
             current = current.next
 
-        return false
+        return False
 
     def searchRec(self, li, key):
         if(not li):
