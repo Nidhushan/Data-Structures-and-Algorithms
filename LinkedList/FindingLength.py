@@ -48,5 +48,6 @@ if __name__ == '__main__':
     llist.push(1)
     llist.push(2)
     llist.push(1)
+    llist.push(3)
     print("Count of nodes is (iterative) : ", llist.getCountIte())
     print("Count of nodes is (recursive) :", llist.getCount())
