@@ -25,7 +25,7 @@ class Solution:
         queue = deque([(root, 1)])
         if not root:
             return 0
-        while deque:
+        while queue:
             node, level = queue.popleft()
             if not node.left and not node.right:
                 return level
