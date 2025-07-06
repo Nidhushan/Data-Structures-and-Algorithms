@@ -60,10 +60,7 @@ Each folder contains:
 
 ---
 
-## 🚀 Getting Started
+📬 Contact
 
-If you're preparing for coding interviews or want to brush up on DSA, clone this repo and start exploring the categories.
-
-```bash
-git clone https://github.com/<your-username>/data-structures-and-algorithms.git
-cd data-structures-and-algorithms
+📧 nidhushun06@gmail.com
+🌐 www.nidhushan.com
