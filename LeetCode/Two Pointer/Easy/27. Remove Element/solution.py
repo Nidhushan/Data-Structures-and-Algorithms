@@ -1,18 +1,43 @@
 class Solution:
     def removeElement(self, nums: List[int], val: int) -> int:
-        N = len(nums)
-        j=0
-        i=0
-        while i<N:
-            if nums[i] == val:
-                j = i
-                while j<N-1:
-                    nums[j] = nums[j+1]
-                    j+=1
-                N-=1
-            else:
-                i+=1
-        return  N
+        j = 0
+
+        for i in range(len(nums)):
+            if nums[i] != val:
+                nums[j] = nums[i]
+                j+=1
+        
+        return j
+        
+        # N = len(nums)
+        # left, right = 0, N-1
+        # count = 0
+        
+        # while left<=right:
+        #     if nums[left] == val:
+        #         nums[left] = nums[right]
+        #         right-=1
+        #     else:
+        #         left += 1
+        
+        # return left
+        
+
+
+        
+        # N = len(nums)
+        # j=0
+        # i=0
+        # while i<N:
+        #     if nums[i] == val:
+        #         j = i
+        #         while j<N-1:
+        #             nums[j] = nums[j+1]
+        #             j+=1
+        #         N-=1
+        #     else:
+        #         i+=1
+        # return  N
 
 
         # j = 0  # points to position to write next valid element
