@@ -3,16 +3,14 @@ class Solution:
         stck = []
 
         for i in operations:
-            if i.isdigit():
-                stck.append(int(i))
-            elif i == "+":
+            if i == "+":
                 stck.append(stck[-1]+stck[-2])
             elif i == "D":
                 stck.append(stck[-1]*2)
             elif i == "C":
                 stck.pop()
-            elif i[0] == "-" and len(i)>=2:
-                stck.append(int(i[1:])*(-1))
+            else:
+                stck.append(int(i))
 
         return sum(stck)
 
