@@ -118,7 +118,55 @@ Time: O(n²), Space: O(1).
 
 ## Common Stack Patterns
 
-- **Monotonic Stack:** Maintains elements in increasing or decreasing order, used for "next greater/smaller" problems.
+- **Monotonic Stack:**  
+  A monotonic stack is a stack that maintains its elements in either strictly increasing or strictly decreasing order. This property allows it to efficiently solve problems involving "next greater" or "next smaller" elements by enabling quick access to relevant elements without scanning the entire array repeatedly.
+
+  **Types:**
+  - *Increasing Monotonic Stack:* Elements are in increasing order from bottom to top. Used to find next smaller elements.
+  - *Decreasing Monotonic Stack:* Elements are in decreasing order from bottom to top. Used to find next greater elements.
+
+  **Why it’s useful:**  
+  Monotonic stacks help reduce the time complexity of problems that would otherwise require nested loops (O(n²)) to O(n) by maintaining a stack of candidate elements and resolving queries as new elements are processed.
+
+  **General Algorithm Template:**
+  ```python
+  def monotonic_stack(arr):
+      stack = []
+      result = [default_value] * len(arr)  # depends on problem
+      for i, val in enumerate(arr):
+          while stack and compare(arr[stack[-1]], val):
+              idx = stack.pop()
+              result[idx] = val  # or other logic based on problem
+          stack.append(i)
+      return result
+  ```
+  - `compare` is a comparison function defining the monotonicity (e.g., `<` for strictly increasing, `>` for strictly decreasing).
+  - The stack stores indices to allow updating the result array at correct positions.
+
+  **Time Complexity:** O(n)  
+  Each element is pushed and popped at most once.
+
+  **Space Complexity:** O(n)  
+  For the stack and the result array.
+
+  **Example Dry Run (Next Greater Element):**  
+  For `arr = [2, 1, 2, 4, 3]` using a decreasing monotonic stack:
+  - i=0, val=2: stack empty → push 0 → stack=[0]
+  - i=1, val=1: 2 > 1 → push 1 → stack=[0,1]
+  - i=2, val=2: pop while top < 2 → pop 1 → res[1]=2; top now 0 with val=2 not less than 2 → stop; push 2 → stack=[0,2]
+  - i=3, val=4: pop 2 → res[2]=4; pop 0 → res[0]=4; push 3 → stack=[3]
+  - i=4, val=3: 4 > 3 → push 4 → stack=[3,4]
+  - End: positions in stack have no next greater → res = [4,2,4,-1,-1]
+
+  **Common Problems Using Monotonic Stacks:**
+  - Next Greater Element I & II (LC 496, 503)
+  - Daily Temperatures (LC 739)
+  - Online Stock Span (LC 901)
+  - Largest Rectangle in Histogram (LC 84)
+  - Maximal Rectangle (LC 85)
+  - Trapping Rain Water (LC 42)
+  - Sliding Window Maximum (LC 239) — uses a deque variant
+
 - **Parentheses/Bracket Matching:** Push opening brackets, pop and check for matching closing brackets.
 - **Expression Evaluation:** Convert infix to postfix, evaluate postfix expressions.
 - **Min Stack:** Stack supporting retrieving the minimum element in O(1) time.
