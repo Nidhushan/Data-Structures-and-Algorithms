@@ -1,5 +1,7 @@
 # Frequency / Hashing Problems
 
+LC 442
+
 ## Introduction to Frequency/Hashmap Technique
 
 Frequency and hashing techniques are fundamental tools for solving a wide variety of problems involving counting occurrences of elements, grouping elements by similarity, or quickly checking membership. They leverage data structures like hash maps (dictionaries in Python) to store and retrieve frequency counts efficiently.
