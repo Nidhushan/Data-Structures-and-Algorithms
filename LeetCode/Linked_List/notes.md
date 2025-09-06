@@ -2,6 +2,8 @@
 
 > **Core idea:** A linked list stores elements in **nodes**. Each node holds a value and one or more **references** (pointers) to other nodes. Unlike arrays, nodes are not necessarily contiguous in memory. This enables **O(1)** insertion/deletion given a pointer to the location, but **O(n)** positional access.
 
+> **Language note (Python vs C/C++/C#):** These notes include cross-language tips where pointer management and memory differ. Python uses GC and references; C/C++ require manual ownership (`new/delete`, RAII); C# uses GC and references but value vs reference semantics still matter.
+
 ---
 
 ## 0) Quick Complexity Table
@@ -29,6 +31,22 @@ class ListNode:
         self.val = val
         self.next = next
 ```
+```cpp
+// C++ (SLL)
+struct ListNode {
+    int val;
+    ListNode* next;
+    ListNode(int v=0, ListNode* n=nullptr): val(v), next(n) {}
+};
+```
+```csharp
+// C# (SLL)
+public class ListNode {
+    public int val;
+    public ListNode next;
+    public ListNode(int v=0, ListNode n=null) { val=v; next=n; }
+}
+```
 - Each node knows only its `next`.
 - Minimal memory; many LeetCode problems use this.
 
@@ -40,6 +58,21 @@ class DListNode:
         self.prev = prev
         self.next = next
 ```
+```cpp
+// C++ (DLL)
+struct DListNode {
+    int val; DListNode* prev; DListNode* next;
+    DListNode(int v=0, DListNode* p=nullptr, DListNode* n=nullptr)
+      : val(v), prev(p), next(n) {}
+};
+```
+```csharp
+// C# (DLL)
+public class DListNode {
+    public int val; public DListNode prev, next;
+    public DListNode(int v=0, DListNode p=null, DListNode n=null) { val=v; prev=p; next=n; }
+}
+```
 - Nodes know `prev` **and** `next`.
 - Easier O(1) delete given the node, easy tail ops; slightly larger memory.
 
@@ -48,6 +81,7 @@ class DListNode:
 
 ### Sentinel (Dummy) Nodes
 - **Dummy head/tail** simplify edge cases (insert/delete at head/tail) by making every operation a middle-case operation.
+- **Language note:** In Python/C#, dummy nodes are GC’ed automatically when out of scope. In C/C++, if you `new` a dummy node, ensure you `delete` it (or use RAII like `std::unique_ptr`) to avoid leaks.
 
 ---
 
@@ -60,6 +94,8 @@ class DListNode:
 ---
 
 ## 3) Fundamental Operations (SLL) with Patterns
+
+> **Language note:** Python `None` ↔ C++ `nullptr` ↔ C# `null`. When translating, mind pointer dereferences and null checks.
 
 ### 3.1 Insert at Head — O(1)
 ```python
@@ -104,6 +140,7 @@ def erase(head: ListNode | None, target: int) -> ListNode | None:
         prev, cur = cur, cur.next
     return dummy.next
 ```
+> **C/C++ tip:** If nodes are allocated with `new`, delete the removed node to free memory (or hold ownership with smart pointers). In C#, no manual free; rely on GC.
 
 ### 3.5 Find (Search) — O(n)
 ```python
@@ -146,6 +183,7 @@ def hasCycle(head: ListNode | None) -> bool:
             return True
     return False
 ```
+> **C++/C# tip:** The comparisons use pointer identity (`slow == fast`). In Python, `is` checks identity; in C++/C# use pointer/reference equality.
 
 ### 4.3 Find Cycle Entry — O(n)
 ```python
@@ -178,6 +216,7 @@ def removeNthFromEnd(head: ListNode, n: int) -> ListNode:
     slow.next = slow.next.next  # delete
     return dummy.next
 ```
+> **Indexing caution:** Off-by-one errors are common. In C-like languages, be explicit about advancing `fast` exactly `n` steps before moving both.
 
 ---
 
@@ -194,6 +233,7 @@ def reverseList(head: ListNode | None) -> ListNode | None:
         prev, cur = cur, nxt
     return prev
 ```
+> **Recursion vs iteration:** Prefer iterative reversal in all languages to avoid stack overflows. Python recursion depth is ~1000 by default; C/C++ don’t guarantee tail-call optimization.
 
 ### 5.2 Reverse Sublist `[m..n]` — O(n)
 ```python
@@ -212,6 +252,38 @@ def reverseBetween(head: ListNode, m: int, n: int) -> ListNode:
         prev.next = move
     return dummy.next
 ```
+
+**Example walkthrough (m = 2, n = 4)**
+
+List: `1 → 2 → 3 → 4 → 5`
+
+Goal: reverse nodes at positions 2..4 → result should be `1 → 4 → 3 → 2 → 5`.
+
+1. Create `dummy → 1 → 2 → 3 → 4 → 5` and set `prev = dummy`.
+2. Advance `prev` to the node **before** the sublist (position `m-1`): now `prev` points to `1`.
+3. Set `cur = prev.next` (start of sublist): `cur` points to `2`.
+4. Repeat `n - m` times the “head-insertion” within the window:
+   - **Iteration 1**:
+     - `move = cur.next` (node `3`)
+     - Detach `move`: `cur.next = move.next` (now `2 → 4 → 5`)
+     - Insert `move` after `prev`: `move.next = prev.next` (3 → 2 …), then `prev.next = move`
+     - List becomes: `1 → 3 → 2 → 4 → 5` (sublist head moved forward)
+   - **Iteration 2**:
+     - `move = cur.next` (node `4`)
+     - Detach `move`: `cur.next = move.next` (now `2 → 5`)
+     - Insert `move` after `prev`: `move.next = prev.next` (4 → 3 …), then `prev.next = move`
+     - List becomes: `1 → 4 → 3 → 2 → 5`
+
+At the end, pointers are re-linked so the middle window is reversed in-place. `dummy.next` is the new head.
+
+**Why it works**
+- `prev` stays fixed at the node before the window.
+- `cur` always points to the **tail** of the partially reversed window.
+- Each step takes the next node (`move`) and places it immediately after `prev` (front of the window), effectively reversing the segment.
+
+**Complexity:** Time O(n) (single pass); Space O(1).
+
+> **C/C++ note:** if nodes are heap-allocated with `new`, you aren’t creating/destroying nodes here—only rewiring `next` pointers—so there’s nothing extra to free.
 
 ### 5.3 Reverse Nodes in k-Group — O(n)
 ```python
@@ -280,6 +352,7 @@ def sortList(head: ListNode | None) -> ListNode | None:
     right = sortList(mid)
     return mergeTwoLists(left, right)
 ```
+> **Language note:** Merge sort on LL is stable. Python version uses recursion (O(log n) stack). In C++, consider iterative bottom-up merge sort to avoid deep recursion on large inputs.
 
 ### 6.3 Partition List Around `x` — O(n)
 ```python
@@ -330,6 +403,7 @@ def isPalindrome(head: ListNode | None) -> bool:
     # ...
     return ok
 ```
+> **Restore step (optional):** In production C++/C#, consider restoring the second half to keep the structure intact, especially if later code depends on it.
 
 ---
 
@@ -371,6 +445,8 @@ def copyRandomList(head: 'Node') -> 'Node':
         cur = cur.next
     return mp[head]
 ```
+
+> **C++ ownership:** If you allocate clones with `new`, ensure every node is eventually `delete`d, or wrap nodes in smart pointers. C# follows Python’s GC model.
 
 ### 9.2 Interleaving copy (O(1) extra space)
 ```python
@@ -458,6 +534,10 @@ class LRUCache:
             del self.mp[rm.k]
 ```
 
+**Cross-language design:**
+- **C++:** use `std::unordered_map<int, Node*>` plus a manual DLL, or `std::list` with `splice` and a map from key to `list::iterator`. Manage memory or use value nodes in `std::list`.
+- **C#:** use `Dictionary<int, LinkedListNode<(int key,int val)>>` with `LinkedList<(int,int)>` and move nodes to front via `LinkedList.AddFirst`/`Remove`.
+
 ---
 
 ## 11) Advanced Topics (for deeper study)
@@ -466,7 +546,7 @@ class LRUCache:
 - **Lock-free Lists:** using atomic CAS operations; hazard pointers/RCU.
 - **Persistent Lists:** structural sharing in functional programming (immutability, cons-lists).
 - **Sentinel Invariants:** formal reasoning that dummy nodes preserve correctness across edge cases.
-- **Memory:** Python uses references/GC; in C/C++ manage allocation/deallocation manually; avoid leaks/dangling pointers.
+- **Memory:** Python uses GC (reference counting + cyclic GC). C++: prefer RAII (`unique_ptr`, `shared_ptr`) and avoid raw owning pointers; C#: GC with deterministic disposal for external resources (`IDisposable`).
 
 ---
 
@@ -477,6 +557,7 @@ class LRUCache:
 - Duplicates, sorted vs unsorted inputs
 - Cycles present/absent
 - Very large lists; recursion depth limits (prefer iterative)
+- **C/C++ sanitizers:** Run with AddressSanitizer/UBSan/Valgrind to catch leaks and invalid accesses in pointer-heavy code.
 
 ---
 
@@ -524,6 +605,16 @@ Advanced:
 3. Given `head`, **split the list** into two halves (first half longer if odd) and return both heads.
 4. Implement **circular detection** and return cycle length.
 5. Prove that the two-pointer intersection algorithm terminates in at most `len(A)+len(B)` steps.
+
+---
+
+### Language Cheat Sheet (LL)
+- `None` (Py) ↔ `nullptr` (C++) ↔ `null` (C#)
+- Identity check: `is` (Py) ↔ pointer equality `==` (C++/C#)
+- Allocation: Python (implicit), C++ `new`/RAII, C# `new` with GC
+- Delete node: Python/C# (GC), C++ `delete` or smart pointers
+- Collections for LRU: Python dict+DLL; C++ `unordered_map` + `list`; C# `Dictionary` + `LinkedList`
+- Recursion depth: Python limited; prefer iterative; C++/C# stack still finite—avoid deep recursion on LL
 
 ---
 
