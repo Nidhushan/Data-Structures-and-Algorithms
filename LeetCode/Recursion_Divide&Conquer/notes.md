@@ -204,7 +204,7 @@ def maxSubArray(nums):
 - [145. Binary Tree Postorder Traversal](https://leetcode.com/problems/binary-tree-postorder-traversal/)
 
 ### Intermediate
-- [46. Permutations](https://leetcode.com/problems/permutations/)
+- [46. Permutations](https://leetcode.com/problems/permutations/) √
 - [78. Subsets](https://leetcode.com/problems/subsets/)
 - [22. Generate Parentheses](https://leetcode.com/problems/generate-parentheses/)
 - [50. Pow(x, n)](https://leetcode.com/problems/powx-n/)
