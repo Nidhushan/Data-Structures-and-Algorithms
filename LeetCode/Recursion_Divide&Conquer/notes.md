@@ -185,14 +185,14 @@ def maxSubArray(nums):
 ## Curated Problem List (LeetCode)
 
 ### Basic
-- [70. Climbing Stairs](https://leetcode.com/problems/climbing-stairs/)
-- [21. Merge Two Sorted Lists](https://leetcode.com/problems/merge-two-sorted-lists/)
-- [104. Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/)
-- [231. Power of Two](https://leetcode.com/problems/power-of-two/)
-- [326. Power of Three](https://leetcode.com/problems/power-of-three/)
-- [342. Power of Four](https://leetcode.com/problems/power-of-four/)
-- [509. Fibonacci Number](https://leetcode.com/problems/fibonacci-number/)
-- [206. Reverse Linked List](https://leetcode.com/problems/reverse-linked-list/)
+- [70. Climbing Stairs](https://leetcode.com/problems/climbing-stairs/) √
+- [21. Merge Two Sorted Lists](https://leetcode.com/problems/merge-two-sorted-lists/) √
+- [104. Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/) √
+- [231. Power of Two](https://leetcode.com/problems/power-of-two/) √
+- [326. Power of Three](https://leetcode.com/problems/power-of-three/) √
+- [342. Power of Four](https://leetcode.com/problems/power-of-four/) √
+- [509. Fibonacci Number](https://leetcode.com/problems/fibonacci-number/) √
+- [206. Reverse Linked List](https://leetcode.com/problems/reverse-linked-list/) √
 - [141. Linked List Cycle](https://leetcode.com/problems/linked-list-cycle/)
 - [100. Same Tree](https://leetcode.com/problems/same-tree/)
 - [226. Invert Binary Tree](https://leetcode.com/problems/invert-binary-tree/)
